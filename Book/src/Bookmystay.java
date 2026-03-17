@@ -1,11 +1,14 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * UseCase2RoomInitialization
+ * UseCase3InventorySetup
  *
- * Demonstrates basic room types using abstraction,
- * inheritance and static availability.
+ * Demonstrates centralized inventory management using HashMap.
+ * Room availability is stored and managed from a single source.
  *
  * @author Student
- * @version 2.1
+ * @version 3.1
  */
 
 public class Bookmystay {
@@ -14,89 +17,68 @@ public class Bookmystay {
 
         System.out.println("=================================");
         System.out.println("Book My Stay - Hotel Booking App");
-        System.out.println("Version 2.1");
+        System.out.println("Version 3.1");
         System.out.println("=================================");
 
-        // Creating room objects
-        Room singleRoom = new SingleRoom();
-        Room doubleRoom = new DoubleRoom();
-        Room suiteRoom = new SuiteRoom();
+        // Initialize inventory
+        RoomInventory inventory = new RoomInventory();
 
-        // Static availability variables
-        int singleAvailability = 10;
-        int doubleAvailability = 5;
-        int suiteAvailability = 2;
+        // Display initial inventory
+        System.out.println("\nCurrent Room Inventory:");
+        inventory.displayInventory();
 
-        System.out.println("\nRoom Details:\n");
+        // Update availability
+        System.out.println("\nUpdating Inventory...");
+        inventory.updateAvailability("Single Room", 8);
+        inventory.updateAvailability("Double Room", 4);
 
-        singleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + singleAvailability);
-        System.out.println();
-
-        doubleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + doubleAvailability);
-        System.out.println();
-
-        suiteRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + suiteAvailability);
+        // Display updated inventory
+        System.out.println("\nUpdated Room Inventory:");
+        inventory.displayInventory();
     }
 }
 
 
 /**
- * Abstract class representing a Room
+ * RoomInventory manages centralized room availability
  */
-abstract class Room {
+class RoomInventory {
 
-    protected String type;
-    protected int beds;
-    protected int size;
-    protected double price;
+    private HashMap<String, Integer> roomAvailability;
 
-    public Room(String type, int beds, int size, double price) {
-        this.type = type;
-        this.beds = beds;
-        this.size = size;
-        this.price = price;
+    /**
+     * Constructor initializes room availability
+     */
+    public RoomInventory() {
+
+        roomAvailability = new HashMap<>();
+
+        roomAvailability.put("Single Room", 10);
+        roomAvailability.put("Double Room", 5);
+        roomAvailability.put("Suite Room", 2);
     }
 
-    public void displayRoomDetails() {
-        System.out.println("Room Type: " + type);
-        System.out.println("Beds: " + beds);
-        System.out.println("Room Size: " + size + " sq.ft");
-        System.out.println("Price per Night: $" + price);
+    /**
+     * Get availability of a room type
+     */
+    public int getAvailability(String roomType) {
+        return roomAvailability.getOrDefault(roomType, 0);
     }
-}
 
-
-/**
- * Single Room class
- */
-class SingleRoom extends Room {
-
-    public SingleRoom() {
-        super("Single Room", 1, 200, 100);
+    /**
+     * Update room availability
+     */
+    public void updateAvailability(String roomType, int newCount) {
+        roomAvailability.put(roomType, newCount);
     }
-}
 
+    /**
+     * Display current inventory
+     */
+    public void displayInventory() {
 
-/**
- * Double Room class
- */
-class DoubleRoom extends Room {
-
-    public DoubleRoom() {
-        super("Double Room", 2, 300, 180);
-    }
-}
-
-
-/**
- * Suite Room class
- */
-class SuiteRoom extends Room {
-
-    public SuiteRoom() {
-        super("Suite Room", 3, 500, 300);
+        for (Map.Entry<String, Integer> entry : roomAvailability.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue() + " rooms available");
+        }
     }
 }
